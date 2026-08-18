@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package users;
+option go_package="generated-users/;usersservice";
+
+message RegReq {
+  string nickname = 1;
+  string password = 2;
+  string request_trace = 3;
+}
+message RegRes {
+  string uuid = 1;
+}
+
+message LogReq {
+  string nickname = 1;
+  string password = 2;
+  string request_trace = 3;
+}
+message LogRes {
+  string uuid = 1;
+  string nickname = 2;
+}
+
+message DelReq {
+  string uuid = 1;
+  string request_trace = 2;
+}
+message DelRes {}
+
+service UsersService {
+  rpc Register (RegReq) returns (RegRes);
+  rpc Login (LogReq) returns (LogRes);
+  rpc Delete (DelReq) returns (DelRes);
+}
