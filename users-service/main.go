@@ -11,7 +11,6 @@ import (
 	"usrsrv/internal/utils"
 
 	pb "github.com/Votline/Dangerous/protos/generated-users"
-	"github.com/google/uuid"
 	"google.golang.org/grpc"
 
 	"go.uber.org/zap"
@@ -50,7 +49,6 @@ func main() {
 func (s *usersserver) Register(ctx context.Context, req *pb.RegReq) (*pb.RegRes, error) {
 	const op = "usersserver.Register"
 
-	uuid := uuid.NewString()
 	nickname := req.GetNickname()
 	rawPassword := req.GetPassword()
 	reqTrace := req.GetRequestTrace()
@@ -69,7 +67,7 @@ func (s *usersserver) Register(ctx context.Context, req *pb.RegReq) (*pb.RegRes,
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
-	if err := s.udb.Register(uuid, nickname, hashPassword, reqTrace); err != nil {
+	if err := s.udb.Register(nickname, hashPassword, reqTrace); err != nil {
 		return nil, fmt.Errorf("%s: register to db: %w", op, err)
 	}
 
@@ -77,7 +75,7 @@ func (s *usersserver) Register(ctx context.Context, req *pb.RegReq) (*pb.RegRes,
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
-	return &pb.RegRes{Uuid: uuid}, nil
+	return &pb.RegRes{}, nil
 }
 
 func (s *usersserver) Login(ctx context.Context, req *pb.LogReq) (*pb.LogRes, error) {

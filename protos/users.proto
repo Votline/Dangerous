@@ -8,22 +8,17 @@ message RegReq {
   string password = 2;
   string request_trace = 3;
 }
-message RegRes {
-  string uuid = 1;
-}
+message RegRes {}
 
 message LogReq {
   string nickname = 1;
   string password = 2;
   string request_trace = 3;
 }
-message LogRes {
-  string uuid = 1;
-  string nickname = 2;
-}
+message LogRes {}
 
 message DelReq {
-  string uuid = 1;
+  string nickname = 1;
   string request_trace = 2;
 }
 message DelRes {}

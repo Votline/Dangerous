@@ -83,7 +83,6 @@ func (x *RegReq) GetRequestTrace() string {
 
 type RegRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -116,13 +115,6 @@ func (x *RegRes) ProtoReflect() protoreflect.Message {
 // Deprecated: Use RegRes.ProtoReflect.Descriptor instead.
 func (*RegRes) Descriptor() ([]byte, []int) {
 	return file_users_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *RegRes) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
 }
 
 type LogReq struct {
@@ -187,8 +179,6 @@ func (x *LogReq) GetRequestTrace() string {
 
 type LogRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
-	Nickname      string                 `protobuf:"bytes,2,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -223,23 +213,9 @@ func (*LogRes) Descriptor() ([]byte, []int) {
 	return file_users_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *LogRes) GetUuid() string {
-	if x != nil {
-		return x.Uuid
-	}
-	return ""
-}
-
-func (x *LogRes) GetNickname() string {
-	if x != nil {
-		return x.Nickname
-	}
-	return ""
-}
-
 type DelReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Nickname      string                 `protobuf:"bytes,1,opt,name=nickname,proto3" json:"nickname,omitempty"`
 	RequestTrace  string                 `protobuf:"bytes,2,opt,name=request_trace,json=requestTrace,proto3" json:"request_trace,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -275,9 +251,9 @@ func (*DelReq) Descriptor() ([]byte, []int) {
 	return file_users_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *DelReq) GetUuid() string {
+func (x *DelReq) GetNickname() string {
 	if x != nil {
-		return x.Uuid
+		return x.Nickname
 	}
 	return ""
 }
@@ -333,18 +309,15 @@ const file_users_proto_rawDesc = "" +
 	"\x06RegReq\x12\x1a\n" +
 	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12#\n" +
-	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"\x1c\n" +
-	"\x06RegRes\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\"e\n" +
+	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"\b\n" +
+	"\x06RegRes\"e\n" +
 	"\x06LogReq\x12\x1a\n" +
 	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12#\n" +
-	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"8\n" +
-	"\x06LogRes\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x1a\n" +
-	"\bnickname\x18\x02 \x01(\tR\bnickname\"A\n" +
-	"\x06DelReq\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12#\n" +
+	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"\b\n" +
+	"\x06LogRes\"I\n" +
+	"\x06DelReq\x12\x1a\n" +
+	"\bnickname\x18\x01 \x01(\tR\bnickname\x12#\n" +
 	"\rrequest_trace\x18\x02 \x01(\tR\frequestTrace\"\b\n" +
 	"\x06DelRes2\x87\x01\n" +
 	"\fUsersService\x12(\n" +
