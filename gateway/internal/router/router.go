@@ -25,7 +25,7 @@ type HTTPServer struct {
 }
 
 func (s *HTTPServer) Init(log *zap.Logger) error {
-	addr := utils.GetEnvString("HTTP_ADDR", ":8080")
+	addr := ":" + utils.GetEnvString("GATEWAY_PORT", "8080")
 
 	mux := http.NewServeMux()
 	s.srv = &http.Server{

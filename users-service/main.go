@@ -25,7 +25,7 @@ type usersserver struct {
 func main() {
 	log, _ := zap.NewDevelopment()
 
-	addr := utils.GetEnvString("USERS_SERVICE_ADDR", ":50051")
+	addr := ":" + utils.GetEnvString("USERS_SERVICE_PORT", "50051")
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
 		log.Fatal("failed to create listen", zap.Error(err))

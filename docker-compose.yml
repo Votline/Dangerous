@@ -1,0 +1,45 @@
+services:
+
+  gateway:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${GATEWAY_PORT}:${GATEWAY_PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  users-service:
+    build:
+      context: .
+      dockerfile: users-service/Dockerfile
+    env_file:
+      - .env
+      - ./users-service/.env_vars
+    ports:
+      - "${USERS_SERVICE_PORT}:${USERS_SERVICE_PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17
+    ports:
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    env_file:
+      - .env
+    volumes:
+      - ./users-service/init.sql:/docker-entrypoint-initdb.d/1-users.sql:ro
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c 'SELECT 1 FROM users LIMIT 1;'"]
+      interval: 2s
+      timeout: 10s
+      retries: 10
+      start_period: 5s

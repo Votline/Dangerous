@@ -51,7 +51,7 @@ func NewUDB(log *zap.Logger) (DB, error) {
 	}
 
 	connLifetime := time.Duration(utils.GetEnvInt("DB_MAX_CONN_LIFETIME", 10))
-	connIdletime := time.Duration(utils.GetEnvInt("DB_MAX_CONN_LIFETIME", 5))
+	connIdletime := time.Duration(utils.GetEnvInt("DB_MAX_CONN_IDLETIME", 5))
 
 	db.SetMaxIdleConns(utils.GetEnvInt("DB_MAX_IDLE_CONNS", 10))
 	db.SetMaxOpenConns(utils.GetEnvInt("DB_MAX_OPEN_CONNS", 10))
