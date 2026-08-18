@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"gateway/internal/utils"
+
 	"go.uber.org/zap"
 )
 
@@ -23,16 +25,24 @@ type HTTPServer struct {
 }
 
 func (s *HTTPServer) Init(log *zap.Logger) error {
+	addr := utils.GetEnvString("HTTP_ADDR", ":8080")
+
 	mux := http.NewServeMux()
 	s.srv = &http.Server{
+		Addr:    addr,
 		Handler: mux,
 	}
 	s.log = log
+
 	return nil
 }
 
 func (s *HTTPServer) Start() error {
 	const op = "router.Start"
+
+	s.log.Debug("Starting...",
+		zap.String("op", op),
+		zap.String("addr", s.srv.Addr))
 	if err := s.srv.ListenAndServe(); err != nil {
 		return fmt.Errorf("%s: listen and serve: %w", op, err)
 	}
@@ -42,6 +52,7 @@ func (s *HTTPServer) Start() error {
 func (s *HTTPServer) Shutdown(ctx context.Context) error {
 	const op = "router.Shutdown"
 
+	s.log.Debug("Shutdowning...", zap.String("op", op))
 	if err := s.srv.Shutdown(ctx); err != nil {
 		return fmt.Errorf("%s: shutdown: %w", op, err)
 	}

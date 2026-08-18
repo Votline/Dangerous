@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	log := zap.NewDevelopment()
+	log, _ := zap.NewDevelopment()
 
 	var srv router.HTTPServer
 	srv.Init(log)
