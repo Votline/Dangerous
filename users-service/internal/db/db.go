@@ -17,7 +17,7 @@ import (
 )
 
 type DB interface {
-	Register(uuid, nickname, password, reqTrace string) error
+	Register(nickname, password, reqTrace string) error
 	Login(nickname, reqTrace string) (string, string, error)
 	Delete(uuid, reqTrace string) error
 	Shutdown(ctx context.Context) error
@@ -72,7 +72,7 @@ func (d *UDB) Shutdown(ctx context.Context) error {
 	return nil
 }
 
-func (d *UDB) Register(uuid, nickname, password, reqTrace string) error {
+func (d *UDB) Register(nickname, password, reqTrace string) error {
 	return nil
 }
 
