@@ -216,7 +216,8 @@ func (*LogRes) Descriptor() ([]byte, []int) {
 type DelReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Nickname      string                 `protobuf:"bytes,1,opt,name=nickname,proto3" json:"nickname,omitempty"`
-	RequestTrace  string                 `protobuf:"bytes,2,opt,name=request_trace,json=requestTrace,proto3" json:"request_trace,omitempty"`
+	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
+	RequestTrace  string                 `protobuf:"bytes,3,opt,name=request_trace,json=requestTrace,proto3" json:"request_trace,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -254,6 +255,13 @@ func (*DelReq) Descriptor() ([]byte, []int) {
 func (x *DelReq) GetNickname() string {
 	if x != nil {
 		return x.Nickname
+	}
+	return ""
+}
+
+func (x *DelReq) GetPassword() string {
+	if x != nil {
+		return x.Password
 	}
 	return ""
 }
@@ -315,10 +323,11 @@ const file_users_proto_rawDesc = "" +
 	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12#\n" +
 	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"\b\n" +
-	"\x06LogRes\"I\n" +
+	"\x06LogRes\"e\n" +
 	"\x06DelReq\x12\x1a\n" +
-	"\bnickname\x18\x01 \x01(\tR\bnickname\x12#\n" +
-	"\rrequest_trace\x18\x02 \x01(\tR\frequestTrace\"\b\n" +
+	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x1a\n" +
+	"\bpassword\x18\x02 \x01(\tR\bpassword\x12#\n" +
+	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"\b\n" +
 	"\x06DelRes2\x87\x01\n" +
 	"\fUsersService\x12(\n" +
 	"\bRegister\x12\r.users.RegReq\x1a\r.users.RegRes\x12%\n" +

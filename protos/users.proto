@@ -19,7 +19,8 @@ message LogRes {}
 
 message DelReq {
   string nickname = 1;
-  string request_trace = 2;
+  string password = 2;
+  string request_trace = 3;
 }
 message DelRes {}
 
