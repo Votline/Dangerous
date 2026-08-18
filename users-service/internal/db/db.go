@@ -18,7 +18,7 @@ import (
 
 type DB interface {
 	Register(nickname, password, reqTrace string, ctx context.Context) error
-	Login(nickname, reqTrace string, buf *string, ctx context.Context) error
+	Get(nickname, reqTrace string, ctx context.Context) (string, error)
 	Delete(nickname, reqTrace string, ctx context.Context) error
 	Shutdown(ctx context.Context) error
 }
@@ -105,10 +105,10 @@ func (d *UDB) Register(nickname, password, reqTrace string, ctx context.Context)
 	return nil
 }
 
-func (d *UDB) Login(nickname, reqTrace string, buf *string, ctx context.Context) error {
-	const op = "db.Login"
+func (d *UDB) Get(nickname, reqTrace string, ctx context.Context) (string, error) {
+	const op = "db.Get"
 
-	d.log.Info("Login request",
+	d.log.Info("Get request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -117,22 +117,23 @@ func (d *UDB) Login(nickname, reqTrace string, buf *string, ctx context.Context)
 		Where(sq.Eq{"nickname": nickname}).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("%s: insert to db: %w", op, err)
+		return "", fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
 	d.log.Info("Query created",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
-	if err := d.db.SelectContext(ctx, buf, query, args...); err != nil {
-		return fmt.Errorf("%s: insert to db: %w", op, err)
+	var password string
+	if err := d.db.GetContext(ctx, &password, query, args...); err != nil {
+		return "", fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
 	d.log.Info("Successfully logged in",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
-	return nil
+	return password, nil
 }
 
 func (d *UDB) Delete(nickname, reqTrace string, ctx context.Context) error {

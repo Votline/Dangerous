@@ -5,6 +5,8 @@ github.com/Votline/Dangerous/protos v0.0.1 h1:1DnsmXsnxRVgQ2qepNW4QZDjIu8P3YyKUG
 github.com/Votline/Dangerous/protos v0.0.1/go.mod h1:4Z6pQFrspa77E/HN9dJgrr63j9zvWIHCW1ZdJKqJFSw=
 github.com/Votline/Dangerous/protos v0.0.2 h1:Y0As4Wt9iO+T3Heh6h4Vm7tkeajpTd0quswnSg5o64w=
 github.com/Votline/Dangerous/protos v0.0.2/go.mod h1:4Z6pQFrspa77E/HN9dJgrr63j9zvWIHCW1ZdJKqJFSw=
+github.com/Votline/Dangerous/protos v0.0.3 h1:0kZtG7GHonQhxM/TIfUCfeuoISNBtbYBZtd+OhfsCt8=
+github.com/Votline/Dangerous/protos v0.0.3/go.mod h1:4Z6pQFrspa77E/HN9dJgrr63j9zvWIHCW1ZdJKqJFSw=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/go-sql-driver/mysql v1.8.1/go.mod h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=
 github.com/google/uuid v1.6.0 h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=

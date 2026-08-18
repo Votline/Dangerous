@@ -4,7 +4,7 @@ go 1.26.3
 
 require (
 	github.com/Masterminds/squirrel v1.5.4 // indirect
-	github.com/Votline/Dangerous/protos v0.0.2 // indirect
+	github.com/Votline/Dangerous/protos v0.0.3 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jmoiron/sqlx v1.4.0 // indirect
 	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect

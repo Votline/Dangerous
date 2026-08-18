@@ -80,10 +80,67 @@ func (s *usersserver) Register(ctx context.Context, req *pb.RegReq) (*pb.RegRes,
 
 func (s *usersserver) Login(ctx context.Context, req *pb.LogReq) (*pb.LogRes, error) {
 	const op = "usersserver.Login"
-	return nil, nil
+
+	nickname := req.GetNickname()
+	rawPassword := req.GetPassword()
+	reqTrace := req.GetRequestTrace()
+
+	s.log.Info("Login request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace),
+		zap.String("nickname", nickname))
+
+	gettedPswd, err := s.udb.Get(nickname, reqTrace, ctx)
+	if err != nil {
+		return nil, fmt.Errorf("%s: login to db: %w", op, err)
+	}
+
+	s.log.Info("Getted user",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	if err := security.Check(rawPassword, gettedPswd); err != nil {
+		return nil, fmt.Errorf("%s: check password: %w", op, err)
+	}
+
+	s.log.Info("Security confirmed",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	return &pb.LogRes{}, nil
 }
 
 func (s *usersserver) Delete(ctx context.Context, req *pb.DelReq) (*pb.DelRes, error) {
 	const op = "usersserver.Delete"
+
+	nickname := req.GetNickname()
+	rawPassword := req.GetPassword()
+	reqTrace := req.GetRequestTrace()
+
+	s.log.Info("Delete request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace),
+		zap.String("nickname", nickname))
+
+	if _, err := s.Login(ctx, &pb.LogReq{
+		Nickname:     nickname,
+		Password:     rawPassword,
+		RequestTrace: reqTrace,
+	}); err != nil {
+		return nil, fmt.Errorf("%s: authentication failed: %w", op, err)
+	}
+
+	s.log.Info("Authentication confirmed",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	if err := s.udb.Delete(nickname, reqTrace, ctx); err != nil {
+		return nil, fmt.Errorf("%s: delete from db: %w", op, err)
+	}
+
+	s.log.Info("Successfully deleted",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
 	return nil, nil
 }
