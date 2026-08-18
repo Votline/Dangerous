@@ -67,7 +67,7 @@ func (s *usersserver) Register(ctx context.Context, req *pb.RegReq) (*pb.RegRes,
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
-	if err := s.udb.Register(nickname, hashPassword, reqTrace); err != nil {
+	if err := s.udb.Register(nickname, hashPassword, reqTrace, ctx); err != nil {
 		return nil, fmt.Errorf("%s: register to db: %w", op, err)
 	}
 

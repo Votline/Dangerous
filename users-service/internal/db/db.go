@@ -17,24 +17,21 @@ import (
 )
 
 type DB interface {
-	Register(nickname, password, reqTrace string) error
-	Login(nickname, reqTrace string) (string, string, error)
-	Delete(uuid, reqTrace string) error
+	Register(nickname, password, reqTrace string, ctx context.Context) error
+	Login(nickname, reqTrace string, buf *string, ctx context.Context) error
+	Delete(nickname, reqTrace string, ctx context.Context) error
 	Shutdown(ctx context.Context) error
 }
 
 type UDB struct {
-	db *sqlx.DB
-	bd sq.StatementBuilderType
+	tableName string
+	log       *zap.Logger
+	db        *sqlx.DB
+	bd        sq.StatementBuilderType
 }
 
 func NewUDB(log *zap.Logger) (DB, error) {
 	const op = "db.NewUDB"
-
-	return &UDB{
-		db: nil,
-		bd: sq.StatementBuilder.PlaceholderFormat(sq.Dollar),
-	}, nil
 
 	connStr := os.Getenv("DB_URL")
 	if connStr == "" {
@@ -43,6 +40,10 @@ func NewUDB(log *zap.Logger) (DB, error) {
 	driver := os.Getenv("DB_DRIVER")
 	if driver == "" {
 		return nil, fmt.Errorf("%s: get db driver: no db_driver in env", op)
+	}
+	tableName := os.Getenv("DB_TABLE_NAME")
+	if tableName == "" {
+		return nil, fmt.Errorf("%s: get table name: no table name", op)
 	}
 
 	db, err := sqlx.Connect(driver, connStr)
@@ -59,8 +60,10 @@ func NewUDB(log *zap.Logger) (DB, error) {
 	db.SetConnMaxIdleTime(connIdletime * time.Minute)
 
 	return &UDB{
-		db: db,
-		bd: sq.StatementBuilder.PlaceholderFormat(sq.Dollar),
+		log:       log,
+		db:        db,
+		tableName: tableName,
+		bd:        sq.StatementBuilder.PlaceholderFormat(sq.Dollar),
 	}, nil
 }
 
@@ -72,14 +75,91 @@ func (d *UDB) Shutdown(ctx context.Context) error {
 	return nil
 }
 
-func (d *UDB) Register(nickname, password, reqTrace string) error {
+func (d *UDB) Register(nickname, password, reqTrace string, ctx context.Context) error {
+	const op = "db.Register"
+
+	d.log.Info("Register request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	query, args, err := d.bd.Insert(d.tableName).
+		Columns("nickname", "password").
+		Values(nickname, password).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("%s: insert to db: %w", op, err)
+	}
+
+	d.log.Info("Query created",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	if _, err := d.db.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("%s: insert to db: %w", op, err)
+	}
+
+	d.log.Info("Successfully registred user",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
 	return nil
 }
 
-func (d *UDB) Login(nickname, reqTrace string) (string, string, error) {
-	return "", "", nil
+func (d *UDB) Login(nickname, reqTrace string, buf *string, ctx context.Context) error {
+	const op = "db.Login"
+
+	d.log.Info("Login request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	query, args, err := d.bd.Select("password").
+		From(d.tableName).
+		Where(sq.Eq{"nickname": nickname}).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("%s: insert to db: %w", op, err)
+	}
+
+	d.log.Info("Query created",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	if err := d.db.SelectContext(ctx, buf, query, args...); err != nil {
+		return fmt.Errorf("%s: insert to db: %w", op, err)
+	}
+
+	d.log.Info("Successfully logged in",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	return nil
 }
 
-func (d *UDB) Delete(uuid, reqTrace string) error {
+func (d *UDB) Delete(nickname, reqTrace string, ctx context.Context) error {
+	const op = "db.Delete"
+
+	d.log.Info("Delete request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	query, args, err := d.bd.Delete(d.tableName).
+		Where(sq.Eq{"nickname": nickname}).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("%s: insert to db: %w", op, err)
+	}
+
+	d.log.Info("Query created",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	if _, err := d.db.ExecContext(ctx, query, args...); err != nil {
+		return fmt.Errorf("%s: insert to db: %w", op, err)
+	}
+
+	d.log.Info("Successfully deleted",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
 	return nil
 }
