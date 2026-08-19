@@ -7,7 +7,10 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"time"
 
+	"gateway/internal/services"
+	usersservice "gateway/internal/users-service"
 	"gateway/internal/utils"
 
 	"go.uber.org/zap"
@@ -20,8 +23,9 @@ type Server interface {
 }
 
 type HTTPServer struct {
-	srv *http.Server
-	log *zap.Logger
+	srv  *http.Server
+	log  *zap.Logger
+	svcs []services.Service
 }
 
 func (s *HTTPServer) Init(log *zap.Logger) error {
@@ -33,6 +37,8 @@ func (s *HTTPServer) Init(log *zap.Logger) error {
 		Handler: mux,
 	}
 	s.log = log
+
+	s.registerServices(mux)
 
 	return nil
 }
@@ -52,9 +58,40 @@ func (s *HTTPServer) Start() error {
 func (s *HTTPServer) Shutdown(ctx context.Context) error {
 	const op = "router.Shutdown"
 
-	s.log.Debug("Shutdowning...", zap.String("op", op))
+	s.log.Debug("Shutdowning http server...", zap.String("op", op))
 	if err := s.srv.Shutdown(ctx); err != nil {
 		return fmt.Errorf("%s: shutdown: %w", op, err)
 	}
+
+	s.log.Debug("Shutdowning services...", zap.String("op", op))
+
+	for _, svc := range s.svcs {
+		if err := svc.Shutdown(ctx); err != nil {
+			s.log.Error("Shutdown failed",
+				zap.String("op", op),
+				zap.String("name", svc.GetName()),
+				zap.Error(err))
+		}
+		s.log.Error("Shutdowned",
+			zap.String("op", op),
+			zap.String("name", svc.GetName()))
+	}
+
+	return nil
+}
+
+func (s *HTTPServer) registerServices(mux *http.ServeMux) error {
+	const op = "router.registerServices"
+
+	ctxTimeout := time.Duration(utils.GetEnvInt("CTX_TIMEOUT", 10)) * time.Second
+
+	var us usersservice.UsersService
+	if err := us.Init(ctxTimeout, mux, s.log); err != nil {
+		return fmt.Errorf("%s: users-service init: %w", op, err)
+	}
+
+	s.svcs = make([]services.Service, 0, 1)
+	s.svcs = append(s.svcs, &us)
+
 	return nil
 }

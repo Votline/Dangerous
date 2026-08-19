@@ -1,0 +1,15 @@
+[http_config]
+URL:http://localhost:8080/register
+Method:POST
+Body:`
+	{
+		"nickname": "votline",
+		"password": "easiset"
+	}
+`
+ID:0
+Type:http
+Response:`users_service.Register: rpc call: rpc error: code = Unknown desc = usersserver.Register: register to db: db.Register: insert to db: pq: duplicate key value violates unique constraint "users_pkey" (23505)
+`
+[\http_config]
+
