@@ -1,5 +1,5 @@
-[http_config]
-URL:http://localhost:8080/register
+[reg]
+URL:http://localhost:8080/api/register
 Method:POST
 Body:`
 	{
@@ -9,7 +9,50 @@ Body:`
 `
 ID:0
 Type:http
-Response:`users_service.Register: rpc call: rpc error: code = Unknown desc = usersserver.Register: register to db: db.Register: insert to db: pq: duplicate key value violates unique constraint "users_pkey" (23505)
+Response:`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGxpbmUiLCJleHAiOjE3ODcxMzE1NDV9.HrbEaCUYvAb32T8Hg8bzdsHv-9usGf850P5usBCf9mg"}
 `
-[\http_config]
+[\reg]
+
+[log]
+URL:http://localhost:8080/api/login
+Method:POST
+Body:`
+	{
+		"nickname": "votline",
+		"password": "easiset"
+	}
+`
+ID:1
+Type:http
+Response:`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGxpbmUiLCJleHAiOjE3ODcxMzE1NDV9.HrbEaCUYvAb32T8Hg8bzdsHv-9usGf850P5usBCf9mg"}
+`
+[\log]
+
+[del]
+URL:http://localhost:8080/api/delete
+Method:DELETE
+Headers:`
+	Authorization: Bearer {RESPONSE id=1 json:token}
+	X-Confirm-Password: easiset
+`
+ID:2
+Type:http
+Response:
+[\del]
+
+[rep_log]
+TargetID:1
+ID:3
+Type:repeat
+Response:`users_service.Login: rpc call: rpc error: code = Unknown desc = usersserver.Login: login to db: db.Get: insert to db: sql: no rows in result set
+`
+[\rep_log]
+
+[rep_del]
+TargetID:2
+ID:4
+Type:repeat
+Response:`users_service.Delete: rpc call: rpc error: code = Unknown desc = usersserver.Delete: authentication failed: usersserver.Login: login to db: db.Get: insert to db: sql: no rows in result set
+`
+[\rep_del]
 

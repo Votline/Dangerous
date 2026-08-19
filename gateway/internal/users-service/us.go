@@ -71,5 +71,7 @@ func (s *UsersService) GetName() string {
 }
 
 func (s *UsersService) registerRoutes(mux *http.ServeMux) {
-	mux.HandleFunc("POST /register", s.Register)
+	mux.HandleFunc("POST /api/register", s.Register)
+	mux.HandleFunc("POST /api/login", s.Login)
+	mux.HandleFunc("DELETE /api/delete", s.Delete)
 }

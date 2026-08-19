@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	pb "github.com/Votline/Dangerous/protos/generated-users"
 	"github.com/google/uuid"
@@ -62,4 +63,113 @@ func (s *UsersService) Register(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{
 		"token": token,
 	})
+}
+
+func (s *UsersService) Login(w http.ResponseWriter, r *http.Request) {
+	const op = "users_service.Login"
+
+	reqTrace := uuid.NewString()
+
+	var req Request
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, fmt.Sprintf("%s: decode request: %s", op, err.Error()), http.StatusBadRequest)
+		return
+	}
+
+	s.log.Debug("Login request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
+	defer cancel()
+
+	if _, err := s.client.Login(ctx, &pb.LogReq{
+		Nickname:     req.Nickname,
+		Password:     req.Password,
+		RequestTrace: reqTrace,
+	}); err != nil {
+		http.Error(w, fmt.Sprintf("%s: rpc call: %s", op, err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	s.log.Debug("Successfully logged in",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	token, err := s.jman.GenerateToken(req.Nickname)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("%s: generate token: %s", op, err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	s.log.Debug("Successfully generated jwt",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"token": token,
+	})
+}
+
+func (s *UsersService) Delete(w http.ResponseWriter, r *http.Request) {
+	const op = "users_service.Delete"
+
+	reqTrace := uuid.NewString()
+
+	password := r.Header.Get("X-Confirm-Password")
+	if password == "" {
+		http.Error(w, fmt.Sprintf("%s: get password: password confirmation required", op), http.StatusBadRequest)
+		return
+	}
+
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, fmt.Sprintf("%s: get auth header: authorization required", op), http.StatusBadRequest)
+		return
+	}
+
+	nickname, err := s.extractName(authHeader)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("%s: extract name: %s", op, err.Error()), http.StatusBadRequest)
+		return
+	}
+
+	s.log.Debug("Delete request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
+	defer cancel()
+
+	if _, err := s.client.Delete(ctx, &pb.DelReq{
+		Nickname:     nickname,
+		Password:     password,
+		RequestTrace: reqTrace,
+	}); err != nil {
+		http.Error(w, fmt.Sprintf("%s: rpc call: %s", op, err.Error()), http.StatusInternalServerError)
+		return
+	}
+
+	s.log.Debug("Successfully deleted",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
+	w.WriteHeader(http.StatusNoContent)
+}
+
+func (s *UsersService) extractName(authHeader string) (string, error) {
+	const op = "users_service.extractName"
+
+	_, token, found := strings.Cut(authHeader, " ")
+	if !found || token == "" {
+		return "", fmt.Errorf("%s: cut authHeader: no token", op)
+	}
+
+	uinfo, err := s.jman.ExtractClaims(token)
+	if err != nil {
+		return "", fmt.Errorf("%s: extract claims: %w", op, err)
+	}
+
+	return uinfo.Nickname, nil
 }
