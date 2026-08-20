@@ -1,4 +1,4 @@
 CREATE TABLE IF NOT EXISTS users (
 	nickname TEXT PRIMARY KEY,
 	password TEXT NOT NULL
-)
+);

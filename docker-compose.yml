@@ -25,6 +25,18 @@ services:
       postgres:
         condition: service_healthy
 
+  marks-service:
+    build:
+      context: .
+      dockerfile: marks-service/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${MARKS_SERVICE_PORT}:${MARKS_SERVICE_PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   postgres:
     image: postgres:17
     ports:
