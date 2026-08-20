@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package marks;
+option go_package="generated-marks/;marksservice";
+
+message CommentItem {
+  string nickname = 1;
+  string comment = 2;
+}
+
+message NewReq {
+  string nickname = 1;
+  string comment = 2;
+  double latitude = 3;
+  double longitude = 4;
+}
+message NewRes {}
+
+message GetReq {
+  double latitude = 1;
+  double longitude = 2;
+}
+message GetRes {
+  double latitude = 1;
+  double longitude = 2;
+  int32 total_reports = 3;
+  repeated CommentItem comments = 4;
+}
+
+service MarksService {
+  rpc New (NewReq) returns (NewRes);
+  rpc Get (GetReq) returns (GetRes);
+}
