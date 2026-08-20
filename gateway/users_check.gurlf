@@ -9,7 +9,16 @@ Body:`
 `
 ID:0
 Type:http
-Response:`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGxpbmUiLCJleHAiOjE3ODcxMzE1NDV9.HrbEaCUYvAb32T8Hg8bzdsHv-9usGf850P5usBCf9mg"}
+Response:
+CookieOut:`
+[localhost:8080]
+ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGxpbmUiLCJleHAiOjE3ODcyMjgyMzZ9.DSGlQFWZosiSZDw6p6Ebv7D0J2ogLH8qnMTmLeHIGw4
+ Path:/
+ Max-Age:3600
+ HttpOnly:
+ Secure:
+ SameSite:Lax
+[\localhost:8080]
 `
 [\reg]
 
@@ -24,7 +33,16 @@ Body:`
 `
 ID:1
 Type:http
-Response:`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGxpbmUiLCJleHAiOjE3ODcxMzE1NDV9.HrbEaCUYvAb32T8Hg8bzdsHv-9usGf850P5usBCf9mg"}
+Response:
+CookieOut:`
+[localhost:8080]
+ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGxpbmUiLCJleHAiOjE3ODcyMjgyMzZ9.DSGlQFWZosiSZDw6p6Ebv7D0J2ogLH8qnMTmLeHIGw4
+ Path:/
+ Max-Age:3600
+ HttpOnly:
+ Secure:
+ SameSite:Lax
+[\localhost:8080]
 `
 [\log]
 
@@ -32,7 +50,6 @@ Response:`{"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGx
 URL:http://localhost:8080/api/delete
 Method:DELETE
 Headers:`
-	Authorization: Bearer {RESPONSE id=1 json:token}
 	X-Confirm-Password: easiset
 `
 ID:2

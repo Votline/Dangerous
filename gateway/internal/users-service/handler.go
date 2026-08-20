@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	pb "github.com/Votline/Dangerous/protos/generated-users"
 	"github.com/google/uuid"
@@ -59,10 +58,16 @@ func (s *UsersService) Register(w http.ResponseWriter, r *http.Request) {
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-		"token": token,
-	})
+	cookie := &http.Cookie{
+		Name:     "token",
+		Value:    token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   3600,
+	}
+	http.SetCookie(w, cookie)
 }
 
 func (s *UsersService) Login(w http.ResponseWriter, r *http.Request) {
@@ -106,10 +111,16 @@ func (s *UsersService) Login(w http.ResponseWriter, r *http.Request) {
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(map[string]string{
-		"token": token,
-	})
+	cookie := &http.Cookie{
+		Name:     "token",
+		Value:    token,
+		Path:     "/",
+		HttpOnly: true,
+		Secure:   true,
+		SameSite: http.SameSiteLaxMode,
+		MaxAge:   3600,
+	}
+	http.SetCookie(w, cookie)
 }
 
 func (s *UsersService) Delete(w http.ResponseWriter, r *http.Request) {
@@ -123,17 +134,18 @@ func (s *UsersService) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	authHeader := r.Header.Get("Authorization")
-	if authHeader == "" {
-		http.Error(w, fmt.Sprintf("%s: get auth header: authorization required", op), http.StatusBadRequest)
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		http.Error(w, fmt.Sprintf("%s: get cookie: %s", op, err.Error()), http.StatusBadRequest)
 		return
 	}
 
-	nickname, err := s.extractName(authHeader)
+	uinfo, err := s.jman.ExtractClaims(cookie.Value)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("%s: extract name: %s", op, err.Error()), http.StatusBadRequest)
+		http.Error(w, fmt.Sprintf("%s: extract claims: %s", op, err.Error()), http.StatusBadRequest)
 		return
 	}
+	nickname := uinfo.Nickname
 
 	s.log.Debug("Delete request",
 		zap.String("op", op),
@@ -156,20 +168,4 @@ func (s *UsersService) Delete(w http.ResponseWriter, r *http.Request) {
 		zap.String("reqTrace", reqTrace))
 
 	w.WriteHeader(http.StatusNoContent)
-}
-
-func (s *UsersService) extractName(authHeader string) (string, error) {
-	const op = "users_service.extractName"
-
-	_, token, found := strings.Cut(authHeader, " ")
-	if !found || token == "" {
-		return "", fmt.Errorf("%s: cut authHeader: no token", op)
-	}
-
-	uinfo, err := s.jman.ExtractClaims(token)
-	if err != nil {
-		return "", fmt.Errorf("%s: extract claims: %w", op, err)
-	}
-
-	return uinfo.Nickname, nil
 }
