@@ -31,6 +31,7 @@ services:
       dockerfile: marks-service/Dockerfile
     env_file:
       - .env
+      - ./marks-service/.env_vars
     ports:
       - "${MARKS_SERVICE_PORT}:${MARKS_SERVICE_PORT}"
     depends_on:
@@ -45,6 +46,7 @@ services:
       - .env
     volumes:
       - ./users-service/init.sql:/docker-entrypoint-initdb.d/1-users.sql:ro
+      - ./marks-service/init.sql:/docker-entrypoint-initdb.d/1-marks.sql:ro
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}

@@ -1,0 +1,34 @@
+[reg]
+Target:localhost:50052
+Endpoint:marks.MarksService/New
+Data:`
+        {
+                "nickname": "votline",
+                "comment": "free",
+                "latitude": 80,
+                "longitude": 80,
+                "request_trace": "{RANDOM oneof=uuid}"
+        }
+`
+ProtoPath:{VARIABLE key=marksproto; default=../protos/marks.proto}
+ID:0
+Type:grpc
+Response:{}
+[\reg]
+
+[log]
+Target:localhost:50052
+Endpoint:marks.MarksService/Get
+Data:`
+        {
+                "latitude": 80,
+                "longitude": 80,
+                "request_trace": "{RANDOM oneof=uuid}"
+        }
+`
+ProtoPath:{VARIABLE key=marksproto; default=../protos/marks.proto}
+ID:1
+Type:grpc
+Response:{"totalReports":2,"comments":[{"nickname":"votline","comment":"free"},{"nickname":"votline","comment":"free"}]}
+[\log]
+
