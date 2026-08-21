@@ -79,6 +79,7 @@ type NewReq struct {
 	Comment       string                 `protobuf:"bytes,2,opt,name=comment,proto3" json:"comment,omitempty"`
 	Latitude      float64                `protobuf:"fixed64,3,opt,name=latitude,proto3" json:"latitude,omitempty"`
 	Longitude     float64                `protobuf:"fixed64,4,opt,name=longitude,proto3" json:"longitude,omitempty"`
+	RequestTrace  string                 `protobuf:"bytes,5,opt,name=request_trace,json=requestTrace,proto3" json:"request_trace,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -141,6 +142,13 @@ func (x *NewReq) GetLongitude() float64 {
 	return 0
 }
 
+func (x *NewReq) GetRequestTrace() string {
+	if x != nil {
+		return x.RequestTrace
+	}
+	return ""
+}
+
 type NewRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -181,6 +189,7 @@ type GetReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Latitude      float64                `protobuf:"fixed64,1,opt,name=latitude,proto3" json:"latitude,omitempty"`
 	Longitude     float64                `protobuf:"fixed64,2,opt,name=longitude,proto3" json:"longitude,omitempty"`
+	RequestTrace  string                 `protobuf:"bytes,3,opt,name=request_trace,json=requestTrace,proto3" json:"request_trace,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -227,6 +236,13 @@ func (x *GetReq) GetLongitude() float64 {
 		return x.Longitude
 	}
 	return 0
+}
+
+func (x *GetReq) GetRequestTrace() string {
+	if x != nil {
+		return x.RequestTrace
+	}
+	return ""
 }
 
 type GetRes struct {
@@ -304,16 +320,18 @@ const file_marks_proto_rawDesc = "" +
 	"\vmarks.proto\x12\x05marks\"C\n" +
 	"\vCommentItem\x12\x1a\n" +
 	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x18\n" +
-	"\acomment\x18\x02 \x01(\tR\acomment\"x\n" +
+	"\acomment\x18\x02 \x01(\tR\acomment\"\x9d\x01\n" +
 	"\x06NewReq\x12\x1a\n" +
 	"\bnickname\x18\x01 \x01(\tR\bnickname\x12\x18\n" +
 	"\acomment\x18\x02 \x01(\tR\acomment\x12\x1a\n" +
 	"\blatitude\x18\x03 \x01(\x01R\blatitude\x12\x1c\n" +
-	"\tlongitude\x18\x04 \x01(\x01R\tlongitude\"\b\n" +
-	"\x06NewRes\"B\n" +
+	"\tlongitude\x18\x04 \x01(\x01R\tlongitude\x12#\n" +
+	"\rrequest_trace\x18\x05 \x01(\tR\frequestTrace\"\b\n" +
+	"\x06NewRes\"g\n" +
 	"\x06GetReq\x12\x1a\n" +
 	"\blatitude\x18\x01 \x01(\x01R\blatitude\x12\x1c\n" +
-	"\tlongitude\x18\x02 \x01(\x01R\tlongitude\"\x97\x01\n" +
+	"\tlongitude\x18\x02 \x01(\x01R\tlongitude\x12#\n" +
+	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"\x97\x01\n" +
 	"\x06GetRes\x12\x1a\n" +
 	"\blatitude\x18\x01 \x01(\x01R\blatitude\x12\x1c\n" +
 	"\tlongitude\x18\x02 \x01(\x01R\tlongitude\x12#\n" +

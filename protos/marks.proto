@@ -13,12 +13,14 @@ message NewReq {
   string comment = 2;
   double latitude = 3;
   double longitude = 4;
+  string request_trace = 5;
 }
 message NewRes {}
 
 message GetReq {
   double latitude = 1;
   double longitude = 2;
+  string request_trace = 3;
 }
 message GetRes {
   double latitude = 1;
