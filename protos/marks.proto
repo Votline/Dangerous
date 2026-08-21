@@ -23,10 +23,8 @@ message GetReq {
   string request_trace = 3;
 }
 message GetRes {
-  double latitude = 1;
-  double longitude = 2;
-  int32 total_reports = 3;
-  repeated CommentItem comments = 4;
+  int32 total_reports = 1;
+  repeated CommentItem comments = 2;
 }
 
 service MarksService {

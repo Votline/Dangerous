@@ -247,10 +247,8 @@ func (x *GetReq) GetRequestTrace() string {
 
 type GetRes struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Latitude      float64                `protobuf:"fixed64,1,opt,name=latitude,proto3" json:"latitude,omitempty"`
-	Longitude     float64                `protobuf:"fixed64,2,opt,name=longitude,proto3" json:"longitude,omitempty"`
-	TotalReports  int32                  `protobuf:"varint,3,opt,name=total_reports,json=totalReports,proto3" json:"total_reports,omitempty"`
-	Comments      []*CommentItem         `protobuf:"bytes,4,rep,name=comments,proto3" json:"comments,omitempty"`
+	TotalReports  int32                  `protobuf:"varint,1,opt,name=total_reports,json=totalReports,proto3" json:"total_reports,omitempty"`
+	Comments      []*CommentItem         `protobuf:"bytes,2,rep,name=comments,proto3" json:"comments,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -285,20 +283,6 @@ func (*GetRes) Descriptor() ([]byte, []int) {
 	return file_marks_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *GetRes) GetLatitude() float64 {
-	if x != nil {
-		return x.Latitude
-	}
-	return 0
-}
-
-func (x *GetRes) GetLongitude() float64 {
-	if x != nil {
-		return x.Longitude
-	}
-	return 0
-}
-
 func (x *GetRes) GetTotalReports() int32 {
 	if x != nil {
 		return x.TotalReports
@@ -331,12 +315,10 @@ const file_marks_proto_rawDesc = "" +
 	"\x06GetReq\x12\x1a\n" +
 	"\blatitude\x18\x01 \x01(\x01R\blatitude\x12\x1c\n" +
 	"\tlongitude\x18\x02 \x01(\x01R\tlongitude\x12#\n" +
-	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"\x97\x01\n" +
-	"\x06GetRes\x12\x1a\n" +
-	"\blatitude\x18\x01 \x01(\x01R\blatitude\x12\x1c\n" +
-	"\tlongitude\x18\x02 \x01(\x01R\tlongitude\x12#\n" +
-	"\rtotal_reports\x18\x03 \x01(\x05R\ftotalReports\x12.\n" +
-	"\bcomments\x18\x04 \x03(\v2\x12.marks.CommentItemR\bcomments2X\n" +
+	"\rrequest_trace\x18\x03 \x01(\tR\frequestTrace\"]\n" +
+	"\x06GetRes\x12#\n" +
+	"\rtotal_reports\x18\x01 \x01(\x05R\ftotalReports\x12.\n" +
+	"\bcomments\x18\x02 \x03(\v2\x12.marks.CommentItemR\bcomments2X\n" +
 	"\fMarksService\x12#\n" +
 	"\x03New\x12\r.marks.NewReq\x1a\r.marks.NewRes\x12#\n" +
 	"\x03Get\x12\r.marks.GetReq\x1a\r.marks.GetResB\x1fZ\x1dgenerated-marks/;marksserviceb\x06proto3"
