@@ -10,16 +10,6 @@ Body:`
 ID:0
 Type:http
 Response:
-CookieOut:`
-[localhost:8080]
- token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGxpbmUiLCJleHAiOjE3ODcyMjgyMzZ9.DSGlQFWZosiSZDw6p6Ebv7D0J2ogLH8qnMTmLeHIGw4
- Path:/
- Max-Age:3600
- HttpOnly:
- Secure:
- SameSite:Lax
-[\localhost:8080]
-`
 [\reg]
 
 [log]
@@ -34,16 +24,6 @@ Body:`
 ID:1
 Type:http
 Response:
-CookieOut:`
-[localhost:8080]
- token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6InZvdGxpbmUiLCJleHAiOjE3ODcyMjgyMzZ9.DSGlQFWZosiSZDw6p6Ebv7D0J2ogLH8qnMTmLeHIGw4
- Path:/
- Max-Age:3600
- HttpOnly:
- Secure:
- SameSite:Lax
-[\localhost:8080]
-`
 [\log]
 
 [del]
@@ -54,14 +34,15 @@ Headers:`
 `
 ID:2
 Type:http
-Response:
+Response:`users_service.Delete: get cookie: http: named cookie not present
+`
 [\del]
 
 [rep_log]
 TargetID:1
 ID:3
 Type:repeat
-Response:`users_service.Login: rpc call: rpc error: code = Unknown desc = usersserver.Login: login to db: db.Get: insert to db: sql: no rows in result set
+Response:`users_service.Login: rpc call: services.CallRPC: rpc error circuit breaker is open
 `
 [\rep_log]
 
@@ -69,7 +50,7 @@ Response:`users_service.Login: rpc call: rpc error: code = Unknown desc = userss
 TargetID:2
 ID:4
 Type:repeat
-Response:`users_service.Delete: rpc call: rpc error: code = Unknown desc = usersserver.Delete: authentication failed: usersserver.Login: login to db: db.Get: insert to db: sql: no rows in result set
+Response:`users_service.Delete: get cookie: http: named cookie not present
 `
 [\rep_del]
 

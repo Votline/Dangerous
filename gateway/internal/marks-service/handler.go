@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"gateway/internal/services"
+
 	pb "github.com/Votline/Dangerous/protos/generated-marks"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -47,12 +49,14 @@ func (s *MarksService) New(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
 	defer cancel()
 
-	if _, err := s.client.New(ctx, &pb.NewReq{
-		Nickname:     uinfo.Nickname,
-		Comment:      req.Comment,
-		Latitude:     req.Latitude,
-		Longitude:    req.Longitude,
-		RequestTrace: reqTrace,
+	if _, err := services.CallRPC(s.cb, func() (*pb.NewRes, error) {
+		return s.client.New(ctx, &pb.NewReq{
+			Nickname:     uinfo.Nickname,
+			Comment:      req.Comment,
+			Latitude:     req.Latitude,
+			Longitude:    req.Longitude,
+			RequestTrace: reqTrace,
+		})
 	}); err != nil {
 		http.Error(w, fmt.Sprintf("%s: rpc call: %s", op, err.Error()), http.StatusInternalServerError)
 		return
@@ -81,10 +85,12 @@ func (s *MarksService) Get(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
 	defer cancel()
 
-	res, err := s.client.Get(ctx, &pb.GetReq{
-		Latitude:     req.Latitude,
-		Longitude:    req.Longitude,
-		RequestTrace: reqTrace,
+	res, err := services.CallRPC(s.cb, func() (*pb.GetRes, error) {
+		return s.client.Get(ctx, &pb.GetReq{
+			Latitude:     req.Latitude,
+			Longitude:    req.Longitude,
+			RequestTrace: reqTrace,
+		})
 	})
 	if err != nil {
 		http.Error(w, fmt.Sprintf("%s: rpc call: %s", op, err.Error()), http.StatusInternalServerError)

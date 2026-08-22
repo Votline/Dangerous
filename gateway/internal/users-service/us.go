@@ -9,9 +9,11 @@ import (
 	"os"
 	"time"
 
+	"gateway/internal/cbreaker"
 	"gateway/internal/security"
 
 	pb "github.com/Votline/Dangerous/protos/generated-users"
+	"github.com/sony/gobreaker/v2"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
@@ -24,6 +26,7 @@ type UsersService struct {
 	jman       security.JWTSecurity
 	conn       *grpc.ClientConn
 	client     pb.UsersServiceClient
+	cb         *gobreaker.CircuitBreaker[any]
 }
 
 func (s *UsersService) Init(ctxTimeout time.Duration, mux *http.ServeMux, log *zap.Logger) error {
@@ -50,6 +53,7 @@ func (s *UsersService) Init(ctxTimeout time.Duration, mux *http.ServeMux, log *z
 	s.jman = &jman
 	s.ctxTimeout = ctxTimeout
 	s.client = pb.NewUsersServiceClient(conn)
+	s.cb = cbreaker.NewCB("users", log)
 
 	s.registerRoutes(mux)
 

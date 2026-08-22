@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"gateway/internal/services"
+
 	pb "github.com/Votline/Dangerous/protos/generated-users"
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -35,10 +37,12 @@ func (s *UsersService) Register(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
 	defer cancel()
 
-	if _, err := s.client.Register(ctx, &pb.RegReq{
-		Nickname:     req.Nickname,
-		Password:     req.Password,
-		RequestTrace: reqTrace,
+	if _, err := services.CallRPC(s.cb, func() (*pb.RegRes, error) {
+		return s.client.Register(ctx, &pb.RegReq{
+			Nickname:     req.Nickname,
+			Password:     req.Password,
+			RequestTrace: reqTrace,
+		})
 	}); err != nil {
 		http.Error(w, fmt.Sprintf("%s: rpc call: %s", op, err.Error()), http.StatusInternalServerError)
 		return
@@ -88,10 +92,12 @@ func (s *UsersService) Login(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
 	defer cancel()
 
-	if _, err := s.client.Login(ctx, &pb.LogReq{
-		Nickname:     req.Nickname,
-		Password:     req.Password,
-		RequestTrace: reqTrace,
+	if _, err := services.CallRPC(s.cb, func() (*pb.LogRes, error) {
+		return s.client.Login(ctx, &pb.LogReq{
+			Nickname:     req.Nickname,
+			Password:     req.Password,
+			RequestTrace: reqTrace,
+		})
 	}); err != nil {
 		http.Error(w, fmt.Sprintf("%s: rpc call: %s", op, err.Error()), http.StatusInternalServerError)
 		return
@@ -158,10 +164,12 @@ func (s *UsersService) Delete(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
 	defer cancel()
 
-	if _, err := s.client.Delete(ctx, &pb.DelReq{
-		Nickname:     nickname,
-		Password:     password,
-		RequestTrace: reqTrace,
+	if _, err := services.CallRPC(s.cb, func() (*pb.DelRes, error) {
+		return s.client.Delete(ctx, &pb.DelReq{
+			Nickname:     nickname,
+			Password:     password,
+			RequestTrace: reqTrace,
+		})
 	}); err != nil {
 		http.Error(w, fmt.Sprintf("%s: rpc call: %s", op, err.Error()), http.StatusInternalServerError)
 		return
