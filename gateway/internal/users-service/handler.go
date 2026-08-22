@@ -22,15 +22,15 @@ func (s *UsersService) Register(w http.ResponseWriter, r *http.Request) {
 
 	reqTrace := uuid.NewString()
 
+	s.log.Debug("Register request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
 	var req Request
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, fmt.Sprintf("%s: decode request: %s", op, err.Error()), http.StatusBadRequest)
 		return
 	}
-
-	s.log.Debug("Register request",
-		zap.String("op", op),
-		zap.String("reqTrace", reqTrace))
 
 	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
 	defer cancel()
@@ -75,15 +75,15 @@ func (s *UsersService) Login(w http.ResponseWriter, r *http.Request) {
 
 	reqTrace := uuid.NewString()
 
+	s.log.Debug("Login request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
 	var req Request
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, fmt.Sprintf("%s: decode request: %s", op, err.Error()), http.StatusBadRequest)
 		return
 	}
-
-	s.log.Debug("Login request",
-		zap.String("op", op),
-		zap.String("reqTrace", reqTrace))
 
 	ctx, cancel := context.WithTimeout(r.Context(), s.ctxTimeout)
 	defer cancel()
@@ -128,6 +128,10 @@ func (s *UsersService) Delete(w http.ResponseWriter, r *http.Request) {
 
 	reqTrace := uuid.NewString()
 
+	s.log.Debug("Delete request",
+		zap.String("op", op),
+		zap.String("reqTrace", reqTrace))
+
 	password := r.Header.Get("X-Confirm-Password")
 	if password == "" {
 		http.Error(w, fmt.Sprintf("%s: get password: password confirmation required", op), http.StatusBadRequest)
@@ -147,7 +151,7 @@ func (s *UsersService) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 	nickname := uinfo.Nickname
 
-	s.log.Debug("Delete request",
+	s.log.Debug("Getted user info",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 

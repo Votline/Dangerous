@@ -4,6 +4,7 @@ package security
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
@@ -14,6 +15,7 @@ import (
 
 type JWTSecurity interface {
 	Init() error
+	GetUserInfo(r *http.Request) (UserInfo, error)
 	GenerateToken(nickname string) (string, error)
 	ExtractClaims(tokenStr string) (UserInfo, error)
 	ExtractUnverifiedClaims(tokenStr string) (UserInfo, error)
@@ -94,4 +96,20 @@ func (j *JWTManager) ExtractUnverifiedClaims(tokenStr string) (UserInfo, error) 
 	claims.token = token
 
 	return claims, nil
+}
+
+func (j *JWTManager) GetUserInfo(r *http.Request) (UserInfo, error) {
+	const op = "security.GetUserInfo"
+
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		return UserInfo{}, fmt.Errorf("%s: get cookie: %w", op, err)
+	}
+
+	uinfo, err := j.ExtractClaims(cookie.Value)
+	if err != nil {
+		return UserInfo{}, fmt.Errorf("%s: extract claims: %w", op, err)
+	}
+
+	return uinfo, nil
 }

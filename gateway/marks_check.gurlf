@@ -1,0 +1,54 @@
+[reg]
+URL:http://localhost:8080/api/register
+Method:POST
+Body:`
+	{
+		"nickname": "{RANDOM oneof=uuid}",
+		"password": "easiset"
+	}
+`
+ID:0
+Type:http
+Response:
+CookieOut:`
+[localhost:8080]
+ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6ImRhN2I4NDMwLTQxOTgtNDc3Mi1hZTgzLWI2MzBlOTE5YjdhMCIsImV4cCI6MTc4NzM4MzA2NH0.3xOWf9V1H6CDX1v7UM1cfb7peBENlC9XVB_4R79ExPQ
+ Path:/
+ Max-Age:3600
+ HttpOnly:
+ Secure:
+ SameSite:Lax
+[\localhost:8080]
+`
+[\reg]
+
+[new]
+URL:http://localhost:8080/api/marks/new
+Method:POST
+Body:`
+	{
+		"latitude": 80,
+		"longitude": 80,
+		"Comment": "default"
+	}
+`
+ID:1
+Type:http
+Response:
+[\new]
+
+[get]
+URL:http://localhost:8080/api/marks/get
+Method:POST
+Body:`
+	{
+		"latitude": 80,
+		"longitude": 80
+	}
+`
+ID:2
+Type:http
+Response:`[{"nickname":"votline","comment":"default"},{"nickname":"0297f29c-5cd3-468e-974a-447952254737","comment":"default"},{"nickname":"46b0adef-3c62-45fc-adff-36fd5377e0c0","comment":"default"},{"nickname":"c910ae20-156b-4345-bd83-34650717de5a","comment":"default"},{"nickname":"792fea0c-3fff-4154-b7da-bea406af8c13","comment":"default"},{"nickname":"da7b8430-4198-4772-ae83-b630e919b7a0","comment":"default"}]
+`
+[\get]
+
