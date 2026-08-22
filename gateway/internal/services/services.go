@@ -4,14 +4,91 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"time"
 
+	"github.com/sony/gobreaker/v2"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type Service interface {
 	GetName() string
 	Init(ctxTimeout time.Duration, mux *http.ServeMux, log *zap.Logger) error
 	Shutdown(ctx context.Context) error
+}
+
+// CallRPC calls the function fn and retries it up to 5 times
+// is uses circuit breaker to prevent overloading the server
+func CallRPC[T any](cb *gobreaker.CircuitBreaker[any], fn func() (T, error)) (T, error) {
+	const op = "services.CallRPC"
+	var zero T
+
+	res, err := retryRPC(func() (T, error) {
+		resCb, err := cb.Execute(func() (any, error) {
+			return fn()
+		})
+		if err != nil {
+			return zero, err
+		}
+		return resCb.(T), nil
+	})
+	if err != nil {
+		return zero, fmt.Errorf("%s: rpc error %w", op, err)
+	}
+
+	return res, nil
+}
+
+// retryRPC retries the function fn up to 5 times
+func retryRPC[T any](fn func() (T, error)) (T, error) {
+	const op = "services.retryRPC"
+	var zero T
+
+	for i := range 5 {
+		res, err := fn()
+		if err == nil {
+			return res, nil
+		}
+		if !shouldRetry(err) {
+			return zero, err
+		}
+
+		time.Sleep(time.Duration(i+1) * time.Second)
+	}
+	return zero, fmt.Errorf("%s: failed after 5 attempts", op)
+}
+
+// shouldRetry returns true if the error should be retried
+func shouldRetry(err error) bool {
+	st, ok := status.FromError(err)
+	if ok {
+		switch st.Code() {
+		case
+			codes.Canceled,
+			codes.DeadlineExceeded,
+			codes.ResourceExhausted,
+			codes.Aborted,
+			codes.Unavailable,
+			codes.DataLoss:
+
+			return true
+		case
+			codes.InvalidArgument,
+			codes.NotFound,
+			codes.AlreadyExists,
+			codes.PermissionDenied,
+			codes.FailedPrecondition,
+			codes.OutOfRange,
+			codes.Unimplemented,
+			codes.Internal,
+			codes.Unauthenticated:
+
+			return false
+		}
+	}
+
+	return false
 }
