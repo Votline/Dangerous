@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"time"
 
+	marksservice "gateway/internal/marks-service"
 	"gateway/internal/services"
 	usersservice "gateway/internal/users-service"
 	"gateway/internal/utils"
@@ -90,8 +91,14 @@ func (s *HTTPServer) registerServices(mux *http.ServeMux) error {
 		return fmt.Errorf("%s: users-service init: %w", op, err)
 	}
 
+	var ms marksservice.MarksService
+	if err := ms.Init(ctxTimeout, mux, s.log); err != nil {
+		return fmt.Errorf("%s: marks-service init: %w", op, err)
+	}
+
 	s.svcs = make([]services.Service, 0, 1)
 	s.svcs = append(s.svcs, &us)
+	s.svcs = append(s.svcs, &ms)
 
 	return nil
 }

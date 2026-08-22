@@ -3,7 +3,7 @@ module gateway
 go 1.26.3
 
 require (
-	github.com/Votline/Dangerous/protos v0.0.3
+	github.com/Votline/Dangerous/protos v0.0.5
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/google/uuid v1.6.0
 	go.uber.org/zap v1.28.0

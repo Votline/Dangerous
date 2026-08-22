@@ -1,5 +1,7 @@
 github.com/Votline/Dangerous/protos v0.0.3 h1:0kZtG7GHonQhxM/TIfUCfeuoISNBtbYBZtd+OhfsCt8=
 github.com/Votline/Dangerous/protos v0.0.3/go.mod h1:4Z6pQFrspa77E/HN9dJgrr63j9zvWIHCW1ZdJKqJFSw=
+github.com/Votline/Dangerous/protos v0.0.5 h1:wbRrCS4cwmWogIKkt2S4VE2iZf48af2ajRR8Vi0TCFQ=
+github.com/Votline/Dangerous/protos v0.0.5/go.mod h1:4Z6pQFrspa77E/HN9dJgrr63j9zvWIHCW1ZdJKqJFSw=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
