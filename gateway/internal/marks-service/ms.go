@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"gateway/internal/cbreaker"
-	"gateway/internal/security"
 
 	pb "github.com/Votline/Dangerous/protos/generated-marks"
 	"github.com/sony/gobreaker/v2"
@@ -23,7 +22,6 @@ type MarksService struct {
 	jwtSecret  string
 	log        *zap.Logger
 	ctxTimeout time.Duration
-	jman       security.JWTSecurity
 	conn       *grpc.ClientConn
 	client     pb.MarksServiceClient
 	cb         *gobreaker.CircuitBreaker[any]
@@ -35,11 +33,6 @@ func (s *MarksService) Init(ctxTimeout time.Duration, mux *http.ServeMux, log *z
 	log.Debug("Creating marks-service",
 		zap.String("op", op))
 
-	var jman security.JWTManager
-	if err := jman.Init(); err != nil {
-		return fmt.Errorf("%s: jwtmanager init: %w", op, err)
-	}
-
 	conn, err := grpc.NewClient(
 		os.Getenv("MARKS_SERVICE_HOST")+":"+os.Getenv("MARKS_SERVICE_PORT"),
 		grpc.WithInsecure())
@@ -50,7 +43,6 @@ func (s *MarksService) Init(ctxTimeout time.Duration, mux *http.ServeMux, log *z
 	s.name = "marks_service"
 	s.log = log
 	s.conn = conn
-	s.jman = &jman
 	s.ctxTimeout = ctxTimeout
 	s.client = pb.NewMarksServiceClient(conn)
 	s.cb = cbreaker.NewCB("marks", log)

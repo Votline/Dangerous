@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"gateway/internal/middlewares"
+	"gateway/internal/security"
 	"gateway/internal/services"
 
 	pb "github.com/Votline/Dangerous/protos/generated-marks"
@@ -40,9 +42,9 @@ func (s *MarksService) New(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	uinfo, err := s.jman.GetUserInfo(r)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("%s: get user info: %s", op, err.Error()), http.StatusBadRequest)
+	uinfo, ok := r.Context().Value(middlewares.UserCtxKey).(security.UserInfo)
+	if !ok || uinfo.Nickname == "" {
+		http.Error(w, fmt.Sprintf("%s: auth: no nickname", op), http.StatusUnauthorized)
 		return
 	}
 
