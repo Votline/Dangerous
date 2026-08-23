@@ -7,7 +7,7 @@ import (
 )
 
 func GetEnvString(key, def string) string {
-	val := os.Getenv("key")
+	val := os.Getenv(key)
 	if val == "" {
 		return def
 	}
@@ -15,7 +15,7 @@ func GetEnvString(key, def string) string {
 }
 
 func GetEnvInt(key string, def int) int {
-	val := os.Getenv("key")
+	val := os.Getenv(key)
 	if val == "" {
 		return def
 	}
