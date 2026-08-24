@@ -3,7 +3,7 @@ Target:localhost:50051
 Endpoint:users.UsersService/Register
 Data:`
         {
-                "nickname": "votline",
+                "nickname": "votlines",
                 "password": "passwd",
                 "request_trace": "{RANDOM oneof=uuid}"
         }
@@ -19,7 +19,7 @@ Target:localhost:50051
 Endpoint:users.UsersService/Login
 Data:`
         {
-                "nickname": "votline",
+                "nickname": "votlines",
                 "password": "passwd",
                 "request_trace": "{RANDOM oneof=uuid}"
         }
@@ -35,7 +35,7 @@ Target:localhost:50051
 Endpoint:users.UsersService/Delete
 Data:`
         {
-                "nickname": "votline",
+                "nickname": "votlines",
                 "password": "passwd",
                 "request_trace": "{RANDOM oneof=uuid}"
         }

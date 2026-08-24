@@ -1,34 +1,52 @@
 [reg]
-Target:localhost:50052
-Endpoint:marks.MarksService/New
-Data:`
-        {
-                "nickname": "votline",
-                "comment": "free",
-                "latitude": 80,
-                "longitude": 80,
-                "request_trace": "{RANDOM oneof=uuid}"
-        }
+URL:http://localhost:8080/api/register
+Method:POST
+Body:`
+	{
+		"nickname": "{RANDOM oneof=uuid}",
+		"password": "easiset"
+	}
 `
-ProtoPath:{VARIABLE key=marksproto; default=../protos/marks.proto}
 ID:0
-Type:grpc
-Response:{}
+Type:http
+Response:
+CookieOut:`
+[localhost:8080]
+ token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuaWNrbmFtZSI6ImY4NWRjYzlkLWY2YzgtNDY1Zi1hYWU2LTA1ZGQ3NTRiYTQyMiIsImV4cCI6MTc4NzQ4MjU5NH0.dipwctAoftNiMwTMsm0BMIssh12bv76-wR7-sLq7knQ
+ Path:/
+ Max-Age:3600
+ HttpOnly:
+ Secure:
+ SameSite:Lax
+[\localhost:8080]
+`
 [\reg]
 
-[log]
-Target:localhost:50052
-Endpoint:marks.MarksService/Get
-Data:`
-        {
-                "latitude": 80,
-                "longitude": 80,
-                "request_trace": "{RANDOM oneof=uuid}"
-        }
+[new]
+URL:http://localhost:8080/api/marks/new
+Method:POST
+Body:`
+	{
+		"latitude": 80,
+		"longitude": 80,
+		"Comment": "default"
+	}
 `
-ProtoPath:{VARIABLE key=marksproto; default=../protos/marks.proto}
 ID:1
-Type:grpc
-Response:{"totalReports":2,"comments":[{"nickname":"votline","comment":"free"},{"nickname":"votline","comment":"free"}]}
-[\log]
+Type:http
+Response:
+[\new]
+
+[get]
+URL:http://localhost:8080/api/marks/get
+Method:POST
+Body:`
+	{
+		"latitude": 80,
+		"longitude": 80
+	}
+`
+ID:2
+Type:http
+[\get]
 
