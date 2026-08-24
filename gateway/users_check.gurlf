@@ -70,14 +70,14 @@ Response:
 [\del]
 
 [rep_log]
-TargetID:1
+TargetID:2
 ID:4
 Type:repeat
 Response:
 [\rep_log]
 
 [rep_del]
-TargetID:2
+TargetID:3
 ID:5
 Type:repeat
 Response:

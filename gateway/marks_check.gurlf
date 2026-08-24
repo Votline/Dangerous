@@ -48,7 +48,5 @@ Body:`
 `
 ID:2
 Type:http
-Response:`[{"nickname":"737cb4bc-d5b3-4b9d-8ac5-64646429f71f","comment":"default"},{"nickname":"7183c35c-4e36-437e-915a-a2f67085b450","comment":"default"},{"nickname":"2d74c8e4-4ceb-448f-a7ee-ff96d242af63","comment":"default"},{"nickname":"a11b1e0d-2589-4fef-893a-7692fc5581b4","comment":"default"},{"nickname":"7915324f-f490-42a9-8cdf-5ae62fba6a52","comment":"default"},{"nickname":"47e9687c-826b-4e2c-882e-913de18f1ea7","comment":"default"},{"nickname":"1052faaa-d6a7-45ef-ba01-0fe1f3c7f8fc","comment":"default"},{"nickname":"91b1d00f-ec96-41cd-a10a-92bd18e7beea","comment":"default"},{"nickname":"61121918-48d1-486f-839f-ae09315e1bf9","comment":"default"},{"nickname":"a2f176a5-2808-43de-bce5-fac2a81b1cc8","comment":"default"},{"nickname":"0d3a5a54-4a96-4cdd-a1c3-ec2cbd10a10e","comment":"default"},{"nickname":"00fef3c9-77d4-4e74-8f56-c036b3bd4abe","comment":"default"},{"nickname":"d35fccce-27e9-4d33-ba67-41cc9ce6414e","comment":"default"},{"nickname":"4bfe5738-5036-46c7-9a17-bee7c176f747","comment":"default"},{"nickname":"b617a8df-d169-43fa-b7a9-27a42d22b4fc","comment":"default"},{"nickname":"b605aab3-4444-427d-b2c3-6e684af08e31","comment":"default"},{"nickname":"bb025c99-c0d7-4baa-9776-7cfe12c058b4","comment":"default"},{"nickname":"79429f97-782f-4da9-8058-dfa2a4a774ee","comment":"default"},{"nickname":"f85dcc9d-f6c8-465f-aae6-05dd754ba422","comment":"default"}]
-`
 [\get]
 

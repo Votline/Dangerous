@@ -9,6 +9,8 @@ import (
 
 	"github.com/sony/gobreaker/v2"
 	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // getEnvInt returns the value of the environment variable
@@ -42,6 +44,27 @@ func NewCB(name string, log *zap.Logger) *gobreaker.CircuitBreaker[any] {
 		Interval:    interval * time.Second,
 		ReadyToTrip: func(counts gobreaker.Counts) bool {
 			return counts.ConsecutiveFailures >= failCnt
+		},
+		IsSuccessful: func(err error) bool {
+			if err == nil {
+				return true
+			}
+
+			st, ok := status.FromError(err)
+			if ok {
+				switch st.Code() {
+				case codes.InvalidArgument,
+					codes.NotFound,
+					codes.AlreadyExists,
+					codes.PermissionDenied,
+					codes.Unauthenticated,
+					codes.Internal,
+					codes.Unknown:
+					return true
+				}
+			}
+
+			return false
 		},
 		OnStateChange: func(name string, from gobreaker.State, to gobreaker.State) {
 			log.Info("Circuit breaker state changed",
