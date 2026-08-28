@@ -98,10 +98,10 @@ func (s *HTTPServer) registerServices() (http.Handler, error) {
 	}
 
 	jwtMdwr := middlewares.NewJWTMiddleware(&jman)
-	rlMdwr, err := middlewares.NewRateLimiter(ctxTimeout)
+	/*rlMdwr, err := middlewares.NewRateLimiter(ctxTimeout)
 	if err != nil {
 		return nil, fmt.Errorf("%s: create rate limiter: %w", op, err)
-	}
+	}*/
 
 	mux := http.NewServeMux()  // public
 	pmux := http.NewServeMux() // private
@@ -121,5 +121,5 @@ func (s *HTTPServer) registerServices() (http.Handler, error) {
 
 	mux.Handle("/", jwtMdwr.Handle(pmux.ServeHTTP))
 
-	return rlMdwr.Handle(mux.ServeHTTP), nil
+	return mux, nil
 }
