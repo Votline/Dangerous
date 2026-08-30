@@ -83,7 +83,7 @@ func (d *MDB) Shutdown(ctx context.Context) error {
 func (d *MDB) New(nickname, comment, reqTrace string, lat, lng float64, ctx context.Context) error {
 	const op = "db.New"
 
-	d.log.Info("New request",
+	d.log.Debug("New request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -95,7 +95,7 @@ func (d *MDB) New(nickname, comment, reqTrace string, lat, lng float64, ctx cont
 		return fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Query created",
+	d.log.Debug("Query created",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -103,7 +103,7 @@ func (d *MDB) New(nickname, comment, reqTrace string, lat, lng float64, ctx cont
 		return fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Successfully marked",
+	d.log.Debug("Successfully marked",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -113,7 +113,7 @@ func (d *MDB) New(nickname, comment, reqTrace string, lat, lng float64, ctx cont
 func (d *MDB) Get(lat, lng float64, reqTrace string, ctx context.Context) ([]AdditionalInfo, error) {
 	const op = "db.Get"
 
-	d.log.Info("Get request",
+	d.log.Debug("Get request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -126,7 +126,7 @@ func (d *MDB) Get(lat, lng float64, reqTrace string, ctx context.Context) ([]Add
 		return nil, fmt.Errorf("%s: select from db: %w", op, err)
 	}
 
-	d.log.Info("Query created",
+	d.log.Debug("Query created",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -136,7 +136,7 @@ func (d *MDB) Get(lat, lng float64, reqTrace string, ctx context.Context) ([]Add
 		return nil, fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Successfully getted mark",
+	d.log.Debug("Successfully getted mark",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -146,7 +146,7 @@ func (d *MDB) Get(lat, lng float64, reqTrace string, ctx context.Context) ([]Add
 func (d *MDB) Delete(lat, lng float64, reqTrace string, ctx context.Context) error {
 	const op = "db.Delete"
 
-	d.log.Info("Delete request",
+	d.log.Debug("Delete request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -157,7 +157,7 @@ func (d *MDB) Delete(lat, lng float64, reqTrace string, ctx context.Context) err
 		return fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Query created",
+	d.log.Debug("Query created",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -165,7 +165,7 @@ func (d *MDB) Delete(lat, lng float64, reqTrace string, ctx context.Context) err
 		return fmt.Errorf("%s: delete from db: %w", op, err)
 	}
 
-	d.log.Info("Successfully deleted",
+	d.log.Debug("Successfully deleted",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 

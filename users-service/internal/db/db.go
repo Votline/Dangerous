@@ -78,7 +78,7 @@ func (d *UDB) Shutdown(ctx context.Context) error {
 func (d *UDB) Register(nickname, password, reqTrace string, ctx context.Context) error {
 	const op = "db.Register"
 
-	d.log.Info("Register request",
+	d.log.Debug("Register request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -90,7 +90,7 @@ func (d *UDB) Register(nickname, password, reqTrace string, ctx context.Context)
 		return fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Query created",
+	d.log.Debug("Query created",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -98,7 +98,7 @@ func (d *UDB) Register(nickname, password, reqTrace string, ctx context.Context)
 		return fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Successfully registred user",
+	d.log.Debug("Successfully registred user",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -108,7 +108,7 @@ func (d *UDB) Register(nickname, password, reqTrace string, ctx context.Context)
 func (d *UDB) Get(nickname, reqTrace string, ctx context.Context) (string, error) {
 	const op = "db.Get"
 
-	d.log.Info("Get request",
+	d.log.Debug("Get request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -120,7 +120,7 @@ func (d *UDB) Get(nickname, reqTrace string, ctx context.Context) (string, error
 		return "", fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Query created",
+	d.log.Debug("Query created",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -129,7 +129,7 @@ func (d *UDB) Get(nickname, reqTrace string, ctx context.Context) (string, error
 		return "", fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Successfully logged in",
+	d.log.Debug("Successfully logged in",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -139,7 +139,7 @@ func (d *UDB) Get(nickname, reqTrace string, ctx context.Context) (string, error
 func (d *UDB) Delete(nickname, reqTrace string, ctx context.Context) error {
 	const op = "db.Delete"
 
-	d.log.Info("Delete request",
+	d.log.Debug("Delete request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -150,7 +150,7 @@ func (d *UDB) Delete(nickname, reqTrace string, ctx context.Context) error {
 		return fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Query created",
+	d.log.Debug("Query created",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -158,7 +158,7 @@ func (d *UDB) Delete(nickname, reqTrace string, ctx context.Context) error {
 		return fmt.Errorf("%s: insert to db: %w", op, err)
 	}
 
-	d.log.Info("Successfully deleted",
+	d.log.Debug("Successfully deleted",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 

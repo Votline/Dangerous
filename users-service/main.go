@@ -53,7 +53,7 @@ func (s *usersserver) Register(ctx context.Context, req *pb.RegReq) (*pb.RegRes,
 	rawPassword := req.GetPassword()
 	reqTrace := req.GetRequestTrace()
 
-	s.log.Info("Register request",
+	s.log.Debug("Register request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace),
 		zap.String("nickname", nickname))
@@ -63,7 +63,7 @@ func (s *usersserver) Register(ctx context.Context, req *pb.RegReq) (*pb.RegRes,
 		return nil, fmt.Errorf("%s: hash password: %w", op, err)
 	}
 
-	s.log.Info("Successfully hashed password",
+	s.log.Debug("Successfully hashed password",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -71,7 +71,7 @@ func (s *usersserver) Register(ctx context.Context, req *pb.RegReq) (*pb.RegRes,
 		return nil, fmt.Errorf("%s: register to db: %w", op, err)
 	}
 
-	s.log.Info("Successfully registred user",
+	s.log.Debug("Successfully registred user",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -85,7 +85,7 @@ func (s *usersserver) Login(ctx context.Context, req *pb.LogReq) (*pb.LogRes, er
 	rawPassword := req.GetPassword()
 	reqTrace := req.GetRequestTrace()
 
-	s.log.Info("Login request",
+	s.log.Debug("Login request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace),
 		zap.String("nickname", nickname))
@@ -95,7 +95,7 @@ func (s *usersserver) Login(ctx context.Context, req *pb.LogReq) (*pb.LogRes, er
 		return nil, fmt.Errorf("%s: login to db: %w", op, err)
 	}
 
-	s.log.Info("Getted user",
+	s.log.Debug("Getted user",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -103,7 +103,7 @@ func (s *usersserver) Login(ctx context.Context, req *pb.LogReq) (*pb.LogRes, er
 		return nil, fmt.Errorf("%s: check password: %w", op, err)
 	}
 
-	s.log.Info("Security confirmed",
+	s.log.Debug("Security confirmed",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -117,7 +117,7 @@ func (s *usersserver) Delete(ctx context.Context, req *pb.DelReq) (*pb.DelRes, e
 	rawPassword := req.GetPassword()
 	reqTrace := req.GetRequestTrace()
 
-	s.log.Info("Delete request",
+	s.log.Debug("Delete request",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace),
 		zap.String("nickname", nickname))
@@ -130,7 +130,7 @@ func (s *usersserver) Delete(ctx context.Context, req *pb.DelReq) (*pb.DelRes, e
 		return nil, fmt.Errorf("%s: authentication failed: %w", op, err)
 	}
 
-	s.log.Info("Authentication confirmed",
+	s.log.Debug("Authentication confirmed",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
@@ -138,7 +138,7 @@ func (s *usersserver) Delete(ctx context.Context, req *pb.DelReq) (*pb.DelRes, e
 		return nil, fmt.Errorf("%s: delete from db: %w", op, err)
 	}
 
-	s.log.Info("Successfully deleted",
+	s.log.Debug("Successfully deleted",
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
