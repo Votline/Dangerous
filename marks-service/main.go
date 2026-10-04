@@ -80,6 +80,13 @@ func (s *marksserver) New(ctx context.Context, req *pb.NewReq) (*pb.NewRes, erro
 		zap.String("op", op),
 		zap.String("reqTrace", reqTrace))
 
+	key := fmt.Sprintf("%0.3f:%0.3f", lat, lng)
+	if err := s.mcdb.DelIfExist(ctx, key); err != nil {
+		s.log.Error("Cache delete failed",
+			zap.String("op", op),
+			zap.Error(err))
+	}
+
 	return &pb.NewRes{}, nil
 }
 

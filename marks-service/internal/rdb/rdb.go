@@ -19,6 +19,7 @@ import (
 type RDB interface {
 	GetOrIncr(ctx context.Context, key string) ([]byte, error)
 	SetIfHot(ctx context.Context, key string, val []byte) error
+	DelIfExist(ctx context.Context, key string) error
 }
 
 type MarksCache struct {
@@ -151,6 +152,18 @@ func (rdb *MarksCache) SetIfHot(ctx context.Context, key string, val []byte) err
 
 	rdb.log.Debug("successfully setted",
 		zap.String("op", op))
+
+	return nil
+}
+
+func (rdb *MarksCache) DelIfExist(ctx context.Context, key string) error {
+	const op = "rdb.MarksCache.DelIfExist"
+
+	dataKey := "marks:data:" + key
+
+	if err := rdb.rdb.Del(ctx, dataKey).Err(); err != nil {
+		return fmt.Errorf("%s: delete data: %w", op, err)
+	}
 
 	return nil
 }
